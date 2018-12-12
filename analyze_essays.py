@@ -42,22 +42,28 @@ import pyphen
 dic = pyphen.Pyphen(lang='en')
 import spacy
 nlp = spacy.load('en_core_web_lg')
+import textract
+from docx import Document
 
-# import textract
-# from docx import Document
 
 
-def load_papers(directory='/home/nate/Dropbox/regis/RCC200/writings_by_student/'):
+def load_papers(directory='/home/nate/Dropbox/regis/RCC200/writings_by_student/', subpath='project2', text_only=True, ):
     """
     Loads .doc, .docx, and .pdf papers into dictionary with student's name as key and
     paper string as value.  Sample papers in ./papers/ directory from
     https://www.mesacc.edu/~paoih30491/ArgumentSampleEssays.html
+
+    Keyword arguments:
+    directory -- string; path to papers
+    text_only -- Boolean, if True, will load text.  Otherwise will use textract
+                and python-docx
     """
     folders = glob.glob(directory + '*')
     papers = {}
     for f in folders:
         student = f.split('/')[-1].split(', ')[1]
         print(student)
+        if
         files = glob.glob(f + '/project2/*.txt')
         if len(files) > 1:
             print('uh-oh, more than one final paper; using first one')
