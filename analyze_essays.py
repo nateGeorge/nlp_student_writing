@@ -119,7 +119,7 @@ def clean_text(papers):
     for k in papers.keys():
         # replace any whitespace characters with just one space
         paper = re.sub('[\s]+', ' ', papers[k])
-        raw_spacy_papers = nlp(paper)
+        raw_spacy_papers[k] = nlp(paper)
         lowercased_doc = paper.lower()
         # removes punctuation and numbers
         clean_document = lowercased_doc.translate(table)
@@ -249,7 +249,7 @@ def get_top_grams(docs, n=2, top=20):
 if __name__ == '__main__':
     papers = load_papers()
     raw_spacy_papers, spacy_papers, clean_papers = clean_text(papers)
-    sent_lengths, syllables, readability, asl, asw = get_Flesch_Kincaid(spacy_papers)
+    sent_lengths, syllables, readability, asl, asw = get_Flesch_Kincaid(raw_spacy_papers)
     words, counts = get_top_grams([spacy_papers['Aryan'].text], n=1, top=3)
     make_zipf_plot(counts, words, title='Zipf plot of Aryan\'s essay')
     for stu in spacy_papers.keys():
@@ -267,3 +267,15 @@ if __name__ == '__main__':
     if finder.ngram_fd.N(top_bigrams[0]) > 1:
         print('counts top bigram by PMI appears:')
         print(finder.ngram_fd.N(top_bigrams[0]))
+
+
+    # analyze my essay for comparison
+    with open('/home/nate/Dropbox/regis/RCC200/essays/short_assignment_1_turing/raw_text.txt', 'rb') as f:
+        text = f.read().decode('utf-8')
+
+    essays = {}
+    essays['nate'] = text
+    raw_spacy_papers, spacy_papers, clean_papers = clean_text(essays)
+    sent_lengths, syllables, readability, asl, asw = get_Flesch_Kincaid(raw_spacy_papers)
+    words, counts = get_top_grams([spacy_papers['nate'].text], n=1, top=3)
+    make_zipf_plot(counts, words, title='Zipf plot of Dr. George\'s essay', savepath=path, save=True)
